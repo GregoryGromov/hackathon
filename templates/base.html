@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Overnight Finance Arena{% endblock %}</title>
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+    <link rel="stylesheet" href="/static/css/app.css?v=reinforce-3">
+</head>
+<body class="app-backdrop">
+    <header class="site-header">
+        <div class="shell header-row">
+            <a class="brand" href="{% url 'problem' %}">
+                <img class="brand-logo" src="/static/brand/reinforce-logo192.png" alt="" width="36" height="36">
+                <span class="brand-text">Reinforce Finance</span>
+            </a>
+            <nav class="nav">
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'about' %}"{% if request.resolver_match.url_name == "about" %} class="is-active"{% endif %}>About</a>
+                    <a href="{% url 'problem' %}"{% if request.resolver_match.url_name == "problem" %} class="is-active"{% endif %}>Task</a>
+                    <a href="{% url 'leaderboard' %}"{% if request.resolver_match.url_name == "leaderboard" %} class="is-active"{% endif %}>Leaderboard</a>
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="link-button">Logout</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}">Login</a>
+                    <a href="{% url 'register' %}">Register</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+    <main class="shell layout">
+        {% include "includes/messages.html" %}
+        {% block content %}{% endblock %}
+    </main>
+    <script>
+        document.querySelectorAll("[data-task-card]").forEach((card) => {
+            const buttons = card.querySelectorAll("[data-task-tab-trigger]");
+            const panels = card.querySelectorAll("[data-task-panel]");
+            const activateTab = (target) => {
+                buttons.forEach((current) => {
+                    const active = current.getAttribute("data-task-tab-trigger") === target;
+                    current.classList.toggle("is-active", active);
+                    current.setAttribute("aria-selected", active ? "true" : "false");
+                });
+
+                panels.forEach((panel) => {
+                    const active = panel.getAttribute("data-task-panel") === target;
+                    panel.classList.toggle("is-active", active);
+                    panel.hidden = !active;
+                });
+            };
+
+            buttons.forEach((button) => {
+                button.addEventListener("click", () => {
+                    const target = button.getAttribute("data-task-tab-trigger");
+                    activateTab(target);
+                });
+            });
+
+            const requestedTab = new URLSearchParams(window.location.search).get("tab");
+            if (requestedTab === "submissions" || requestedTab === "description") {
+                activateTab(requestedTab);
+            }
+        });
+
+        const formatElapsed = (startedAt) => {
+            const elapsedSeconds = Math.max(0, Math.floor((Date.now() - startedAt) / 1000));
+            const minutes = Math.floor(elapsedSeconds / 60);
+            const seconds = String(elapsedSeconds % 60).padStart(2, "0");
+            return `${minutes}:${seconds}`;
+        };
+
+        const updateRunningTimers = () => {
+            document.querySelectorAll("[data-running-timer]").forEach((timer) => {
+                const startedAt = Date.parse(timer.getAttribute("data-started-at"));
+                if (Number.isNaN(startedAt)) {
+                    return;
+                }
+                timer.textContent = formatElapsed(startedAt);
+            });
+        };
+
+        updateRunningTimers();
+        document.body.addEventListener("htmx:afterSwap", updateRunningTimers);
+        window.setInterval(updateRunningTimers, 1000);
+    </script>
+</body>
+</html>

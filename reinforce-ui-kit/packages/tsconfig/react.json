@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "@reinforce/tsconfig — React",
+  "extends": "./base.json",
+  "compilerOptions": {
+    "lib": ["ES2024", "ESNext.Temporal", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx"
+  }
+}

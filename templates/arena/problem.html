@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}Problem | Overnight Finance Arena{% endblock %}
+
+{% block content %}
+<section class="top-grid">
+    <section class="card intro-card task-card" data-task-card>
+        <div class="task-header">
+            <div>
+                <p class="section-kicker">Task</p>
+                <h1 class="page-title">Market-Action Arena</h1>
+            </div>
+            <div class="task-toggle" role="tablist" aria-label="Task views" data-task-switcher>
+                <button
+                    type="button"
+                    class="task-toggle-button is-active"
+                    data-task-tab-trigger="description"
+                    aria-selected="true"
+                    role="tab"
+                >
+                    Description
+                </button>
+                <button
+                    type="button"
+                    class="task-toggle-button"
+                    data-task-tab-trigger="submissions"
+                    aria-selected="false"
+                    role="tab"
+                >
+                    Submissions
+                </button>
+            </div>
+        </div>
+        <p class="intro-copy">Build a <code>PredictionModel</code>, submit a ZIP containing <code>solution.py</code>, and get scored automatically on the hidden parquet dataset.</p>
+        <div class="task-panels">
+            <section class="task-panel is-active" data-task-panel="description" role="tabpanel">
+                {% include "arena/problem_statement.html" %}
+            </section>
+            <section class="task-panel" data-task-panel="submissions" role="tabpanel" hidden>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Submission</th>
+                                <th>Created</th>
+                                <th class="submission-file-cell">File</th>
+                                <th class="submission-status-cell">Status</th>
+                                <th>Score</th>
+                                <th>Error</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for submission in submissions %}
+                                {% include "arena/_submission_row.html" %}
+                            {% empty %}
+                                <tr>
+                                    <td colspan="6" class="muted">No submissions yet.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </section>
+
+    <aside class="card submit-card top-submit">
+        <div class="section-header section-header-compact">
+            <div>
+                <h2>Submit</h2>
+                <p class="muted">Upload a ZIP and send it to scoring.</p>
+            </div>
+        </div>
+        <div class="constraint-stack">
+            <div class="constraint-item">
+                <span>Submission</span>
+                <strong>ZIP with exactly one <code>solution.py</code></strong>
+            </div>
+            <div class="constraint-item">
+                <span>Model API</span>
+                <strong><code>PredictionModel.predict(data_point)</code></strong>
+            </div>
+            <div class="constraint-item">
+                <span>Metric</span>
+                <strong>Mean weighted Pearson correlation</strong>
+            </div>
+            <div class="constraint-item">
+                <span>Runner</span>
+                <strong>1 vCPU / 16 GB / no internet</strong>
+            </div>
+        </div>
+        <form method="post" enctype="multipart/form-data" class="form-stack">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            {% for field in form %}
+                <label class="field">
+                    <span>{{ field.label }}</span>
+                    {{ field }}
+                    {{ field.errors }}
+                </label>
+            {% endfor %}
+            <button type="submit" class="button">Submit for scoring</button>
+        </form>
+        <div class="submit-notes">
+            <p class="muted">Max upload size: {{ submission_max_upload_mb }} MB.</p>
+            <p class="muted">The table below updates automatically while your job is queued or running.</p>
+        </div>
+    </aside>
+</section>
+{% endblock %}

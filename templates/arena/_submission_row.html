@@ -1,0 +1,28 @@
+<tr
+    id="submission-{{ submission.id }}"
+    {% if not submission.is_terminal %}
+        hx-get="{% url 'submission-status' submission.id %}"
+        hx-trigger="load delay:1s, every 5s"
+        hx-swap="outerHTML"
+    {% endif %}
+>
+    <td>#{{ submission.user_submission_number }}</td>
+    <td>{{ submission.created_at|date:"Y-m-d H:i:s" }}</td>
+    <td class="submission-file-cell">
+        <code title="{{ submission.uploaded_filename }}">{{ submission.uploaded_filename_short }}</code>
+    </td>
+    <td class="submission-status-cell">
+        <span class="{{ submission.status_badge_class }}">
+            <span>{{ submission.get_status_display }}</span>
+            {% if submission.status == submission.Status.RUNNING and submission.started_at %}
+                <span
+                    class="submission-status-timer"
+                    data-running-timer
+                    data-started-at="{{ submission.started_at|date:'c' }}"
+                >0:00</span>
+            {% endif %}
+        </span>
+    </td>
+    <td>{% if submission.score is not None %}{{ submission.score }}{% else %}<span class="muted">-</span>{% endif %}</td>
+    <td>{% if submission.error_message %}{{ submission.error_message }}{% else %}<span class="muted">-</span>{% endif %}</td>
+</tr>

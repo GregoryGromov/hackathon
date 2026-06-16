@@ -1,0 +1,58 @@
+{
+  "name": "@reinforce/ui-primitives",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./accordion": "./src/accordion/index.ts",
+    "./alert": "./src/alert/index.ts",
+    "./avatar": "./src/avatar/index.ts",
+    "./badge": "./src/badge/index.ts",
+    "./button": "./src/button/index.ts",
+    "./card": "./src/card/index.ts",
+    "./checkbox": "./src/checkbox/index.ts",
+    "./command": "./src/command/index.ts",
+    "./comparison-table": "./src/comparison-table/index.ts",
+    "./dialog": "./src/dialog/index.ts",
+    "./dropdown-menu": "./src/dropdown-menu/index.ts",
+    "./hover-card": "./src/hover-card/index.ts",
+    "./input": "./src/input/index.ts",
+    "./kbd": "./src/kbd/index.ts",
+    "./label": "./src/label/index.ts",
+    "./markdown-prose": "./src/markdown-prose/index.ts",
+    "./nav-link": "./src/nav-link/index.ts",
+    "./navbar": "./src/navbar/index.ts",
+    "./popover": "./src/popover/index.ts",
+    "./progress": "./src/progress/index.ts",
+    "./radio-group": "./src/radio-group/index.ts",
+    "./scroll-area": "./src/scroll-area/index.ts",
+    "./select": "./src/select/index.ts",
+    "./separator": "./src/separator/index.ts",
+    "./sheet": "./src/sheet/index.ts",
+    "./skeleton": "./src/skeleton/index.ts",
+    "./switch": "./src/switch/index.ts",
+    "./table": "./src/table/index.ts",
+    "./tabs": "./src/tabs/index.ts",
+    "./textarea": "./src/textarea/index.ts",
+    "./toggle": "./src/toggle/index.ts",
+    "./tooltip": "./src/tooltip/index.ts",
+    "./typography": "./src/typography/index.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "test": "vitest run --passWithNoTests",
+    "test:coverage": "vitest run --coverage --passWithNoTests",
+    "test:watch": "vitest",
+    "typecheck": "tsc"
+  },
+  "dependencies": {
+    "class-variance-authority": "catalog:"
+  },
+  "devDependencies": {
+    "@reinforce/tsconfig": "workspace:*",
+    "@vitest/coverage-v8": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

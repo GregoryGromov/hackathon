@@ -1,0 +1,49 @@
+{
+  "$schema": "https://turborepo.dev/schema.json",
+  "globalDependencies": ["mise.toml", "biome.json", "pnpm-workspace.yaml"],
+  "tasks": {
+    "topo": {
+      "dependsOn": ["^topo"]
+    },
+    "build": {
+      "outputs": ["dist/**"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "typecheck": {
+      "dependsOn": ["topo"],
+      "inputs": ["src/**/*.{ts,tsx}", "tsconfig.json", "package.json"],
+      "outputs": ["node_modules/.cache/tsc/**"]
+    },
+    "test": {
+      "dependsOn": ["topo"],
+      "inputs": [
+        "src/**",
+        "test/**",
+        "tests/**",
+        "vitest.config.{ts,js,mts,mjs}",
+        "tsconfig.json",
+        "package.json"
+      ]
+    },
+    "test:coverage": {
+      "dependsOn": ["topo"],
+      "inputs": [
+        "src/**",
+        "test/**",
+        "tests/**",
+        "vitest.config.{ts,js,mts,mjs}",
+        "tsconfig.json",
+        "package.json"
+      ],
+      "outputs": ["coverage/**"]
+    },
+    "test:watch": {
+      "cache": false,
+      "persistent": true,
+      "dependsOn": ["topo"]
+    }
+  }
+}

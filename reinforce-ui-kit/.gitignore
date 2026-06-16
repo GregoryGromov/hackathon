@@ -1,0 +1,25 @@
+node_modules/
+.turbo/
+.tanstack/
+.astro/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+
+.env
+.env.local
+.env.*.local
+
+*.log
+.DS_Store
+.idea/
+.vscode/
+.playwright-mcp/
+
+lefthook-local.yml
+
+# Local agent tooling (caveman skills, project skills, hooks) — personal, not repo
+.claude/
+.agents/
+skills-lock.json

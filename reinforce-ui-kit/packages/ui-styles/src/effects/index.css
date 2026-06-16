@@ -1,0 +1,1162 @@
+/* Depends on theme tokens from @reinforce/ui-tokens/theme.css.
+   When importing standalone, ensure theme.css is imported first
+   (or use @reinforce/ui-styles/globals.css which bundles both). */
+
+@utility focus-ring {
+  @apply outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50;
+}
+
+@utility focus-ring-destructive {
+  @apply outline-none focus-visible:ring-[3px] focus-visible:ring-ring-destructive;
+}
+
+@utility focus-ring-success {
+  @apply outline-none focus-visible:ring-[3px] focus-visible:ring-ring-success;
+}
+
+@utility focus-ring-accent {
+  @apply outline-none focus-visible:ring-[3px] focus-visible:ring-accent/45;
+}
+
+@utility disabled-state {
+  @apply disabled:pointer-events-none disabled:opacity-50;
+}
+
+@utility disabled-data-state {
+  @apply data-[disabled]:pointer-events-none data-[disabled]:opacity-50;
+}
+
+@utility hover-accent {
+  @apply hover:bg-accent hover:text-accent-foreground;
+}
+
+@utility hover-primary-soft {
+  @apply hover:bg-primary/10 hover:text-primary;
+}
+
+@utility border-accent-soft {
+  border-color: var(--border-accent-soft);
+}
+
+@utility surface-accent-soft {
+  background-color: var(--accent-soft);
+}
+
+@utility motion-press {
+  @apply motion-safe:active:translate-y-[0.5px];
+}
+
+/* Page-level decorative backdrop: cloud field + organic noise overlay.
+   Tints / base / noise opacity all flow from `--backdrop-*` tokens (see ui-tokens/theme).
+   Decorative layers are viewport-fixed pseudo-elements so they don't stretch with
+   page length — radial clouds painted as background-image on body would scale to
+   document height, drifting their `at X% Y%` anchors far below the fold on long
+   scroll containers. `isolation: isolate` keeps the negative z-index layers
+   scoped to the host and prevents leaking onto positioned descendants. */
+@utility app-backdrop {
+  position: relative;
+  isolation: isolate;
+  background-color: var(--background);
+  min-height: 100dvh;
+}
+
+.app-backdrop::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle at 78% 18%, var(--backdrop-1) 0%, transparent 45%),
+    radial-gradient(circle at 92% 60%, var(--backdrop-2) 0%, transparent 40%),
+    radial-gradient(circle at 18% 15%, var(--backdrop-3) 0%, transparent 45%),
+    radial-gradient(circle at 35% 85%, var(--backdrop-4) 0%, transparent 50%),
+    radial-gradient(circle at 65% 95%, var(--backdrop-5) 0%, transparent 45%),
+    linear-gradient(180deg, var(--backdrop-base-top), var(--backdrop-base-bottom));
+}
+
+.app-backdrop::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: var(--backdrop-noise-opacity);
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.9'/></svg>");
+  background-size: 180px 180px;
+}
+
+.dark .app-backdrop::after {
+  mix-blend-mode: screen;
+}
+
+@utility glass-island {
+  background-color: oklch(from var(--glass-bg-color) l c h / var(--glass-tint-strong));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+  backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+  border: 1px solid var(--glass-border-color);
+  box-shadow:
+    inset 0 1px 0 var(--surface-tint-strong),
+    inset 0 -1px 0 color-mix(in oklab, var(--shadow-color), transparent 95%),
+    var(--glass-halo),
+    0 24px 48px -16px color-mix(in oklab, var(--primary), transparent 82%);
+}
+
+@layer utilities {
+  .hover-accent-soft {
+    transition:
+      background-color var(--motion-duration-quick) var(--motion-ease-standard),
+      color var(--motion-duration-quick) var(--motion-ease-standard);
+  }
+
+  @media (hover: hover) {
+    .hover-accent-soft:hover {
+      background-color: var(--accent-soft);
+    }
+  }
+
+  .hover-row {
+    transition: background-color var(--motion-duration-quick) var(--motion-ease-standard);
+  }
+
+  @media (hover: hover) {
+    .hover-row:hover {
+      background-color: color-mix(in oklab, var(--foreground), transparent 95%);
+    }
+  }
+
+  .hover-item {
+    transition:
+      background-color var(--motion-duration-quick) var(--motion-ease-standard),
+      color var(--motion-duration-quick) var(--motion-ease-standard);
+  }
+
+  @media (hover: hover) {
+    .hover-item:hover,
+    .hover-item:focus-visible,
+    .hover-item[data-highlighted],
+    .hover-item[data-state="open"] {
+      background-color: var(--accent-soft-strong);
+      color: var(--foreground);
+    }
+  }
+
+  .glow-primary {
+    box-shadow:
+      0 4px 15px 0 color-mix(in oklab, var(--glow-primary-color), transparent 70%),
+      0 10px 40px 0 color-mix(in oklab, var(--glow-primary-color), transparent 80%);
+  }
+
+  .glow-accent {
+    box-shadow:
+      0 4px 15px 0 color-mix(in oklab, var(--glow-accent-color), transparent 70%),
+      0 10px 40px 0 color-mix(in oklab, var(--glow-accent-color), transparent 80%);
+  }
+
+  .glass {
+    background-color: oklch(from var(--glass-bg-color) l c h / var(--glass-tint));
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(135%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(135%);
+    border: 1px solid var(--glass-border-color);
+    box-shadow:
+      var(--glass-halo),
+      inset 0 1px 0 0 var(--surface-tint-soft);
+  }
+
+  .glass-weak {
+    background-color: oklch(from var(--glass-bg-color) l c h / var(--glass-tint-weak));
+    -webkit-backdrop-filter: blur(var(--glass-blur-weak)) saturate(120%);
+    backdrop-filter: blur(var(--glass-blur-weak)) saturate(120%);
+    border: 1px solid color-mix(in oklab, var(--glass-border-color), transparent 30%);
+    box-shadow:
+      var(--glass-halo),
+      inset 0 1px 0 0 var(--surface-tint-weak);
+  }
+
+  .glass-strong {
+    background-color: oklch(from var(--glass-bg-color) l c h / var(--glass-tint-strong));
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+    border: 1px solid var(--glass-border-color);
+    box-shadow:
+      var(--glass-halo),
+      inset 0 1px 0 0 var(--surface-tint-medium);
+  }
+
+  .glass-crystal {
+    background-color: oklch(from var(--glass-bg-color) l c h / 0.18);
+    -webkit-backdrop-filter: blur(14px) saturate(125%);
+    backdrop-filter: blur(14px) saturate(125%);
+    border: 1px solid oklch(from var(--glass-border-color) l c h / calc(alpha + 0.06));
+    box-shadow:
+      0 1px 2px color-mix(in oklab, var(--shadow-color), transparent 90%),
+      inset 0 1px 0 0 var(--surface-tint-medium),
+      inset 0 -1px 0 0 color-mix(in oklab, var(--shadow-color), transparent 94%);
+  }
+
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .glass,
+    .glass-strong,
+    .glass-island {
+      background-color: oklch(from var(--glass-bg-color) l c h / 0.92);
+    }
+    .glass-weak,
+    .glass-crystal {
+      background-color: oklch(from var(--glass-bg-color) l c h / 0.85);
+    }
+  }
+
+  /* Cheaper input glass on mobile — fewer composited layers on scroll. */
+  @media (max-width: 768px) {
+    .glass-weak {
+      -webkit-backdrop-filter: blur(8px) saturate(115%);
+      backdrop-filter: blur(8px) saturate(115%);
+    }
+  }
+
+  /* Hover через cross-fade псевдо-слоя НАД элементом (не под).
+     Сам элемент анимирует только transform; ::after несёт halo + accent-rim
+     + gloss и кросс-фейдит по opacity.
+     Почему ::after над, а не под (z-index: -1): родитель имеет
+     backdrop-filter: blur, который сэмплит всё под собой. Если ::after
+     лежит под фоном (z-index: -1), его opacity-fade проходит через blur,
+     а blur sampling дискретный — получается ступенчатое изменение тинта
+     при снятии hover. Над элементом ::after рисуется поверх уже посчитанного
+     glass-фона, blur от него не зависит. pointer-events: none не ломает клики;
+     inset shadows тонкие (1px ring + 1px gloss), визуально работают как
+     акцентная граница, а не перекрытие контента. */
+  .glass-hover {
+    position: relative;
+    transition: transform var(--motion-duration-elevated) var(--motion-ease-standard);
+  }
+
+  .glass-hover::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--motion-duration-elevated) linear;
+    box-shadow:
+      0 6px 12px color-mix(in oklab, var(--shadow-color), transparent 90%),
+      0 24px 48px color-mix(in oklab, var(--glass-hover-halo-color), transparent 76%),
+      inset 0 0 0 1px color-mix(in oklab, var(--accent), transparent 70%),
+      inset 0 1px 0 var(--surface-tint-strong);
+  }
+
+  @media (hover: hover) {
+    .glass-hover:hover {
+      transform: translateY(-2px);
+      transition-duration: var(--motion-duration-standard);
+    }
+    .glass-hover:hover::after {
+      opacity: 1;
+      transition-duration: var(--motion-duration-standard);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .glass-hover,
+    .glass-hover::after {
+      transition: none;
+    }
+    .glass-hover:hover {
+      transform: none;
+    }
+  }
+
+  .glass-link {
+    cursor: pointer;
+    transition:
+      border-color var(--motion-duration-quick) var(--motion-ease-standard),
+      background-color var(--motion-duration-quick) var(--motion-ease-standard);
+  }
+
+  @media (hover: hover) {
+    .glass-link:hover {
+      background-color: oklch(from var(--glass-bg-color) l c h / calc(var(--glass-tint) + 0.06));
+    }
+  }
+
+  .btn-cta {
+    color: var(--primary-foreground);
+    border: 1px solid color-mix(in oklab, var(--primary), transparent 40%);
+    background: linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--primary), white 12%) 0%,
+      var(--primary) 100%
+    );
+    box-shadow:
+      inset 0 1px 0 var(--surface-tint-medium),
+      0 8px 20px -2px color-mix(in oklab, var(--primary), transparent 65%),
+      0 2px 4px color-mix(in oklab, var(--primary), transparent 75%);
+  }
+
+  @media (hover: hover) {
+    .btn-cta:hover {
+      filter: brightness(1.06);
+      background: linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--primary), white 18%) 0%,
+        color-mix(in oklab, var(--primary), white 4%) 100%
+      );
+      box-shadow:
+        inset 0 1px 0 var(--surface-tint-strong),
+        0 12px 28px -4px color-mix(in oklab, var(--primary), transparent 55%),
+        0 2px 6px color-mix(in oklab, var(--primary), transparent 65%);
+    }
+  }
+
+  .dark .btn-cta:hover {
+    box-shadow:
+      inset 0 1px 0 var(--surface-tint-strong),
+      0 0 0 1px oklch(from var(--foreground) l c h / 0.06),
+      0 12px 28px -4px color-mix(in oklab, var(--primary), transparent 50%),
+      0 2px 6px color-mix(in oklab, var(--primary), transparent 60%);
+  }
+
+  .btn-cta-secondary {
+    color: var(--foreground);
+    border: 1px solid color-mix(in oklab, var(--primary), transparent 75%);
+    background: linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--primary), transparent 90%) 0%,
+      color-mix(in oklab, var(--primary), transparent 78%) 100%
+    );
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+    backdrop-filter: blur(12px) saturate(140%);
+    box-shadow:
+      inset 0 1px 0 var(--surface-tint-medium),
+      0 4px 12px -2px color-mix(in oklab, var(--primary), transparent 80%),
+      0 1px 2px color-mix(in oklab, var(--shadow-color), transparent 96%);
+  }
+
+  @media (hover: hover) {
+    .btn-cta-secondary:hover {
+      border-color: color-mix(in oklab, var(--primary), transparent 55%);
+      background: linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--primary), transparent 80%) 0%,
+        color-mix(in oklab, var(--primary), transparent 64%) 100%
+      );
+      box-shadow:
+        inset 0 1px 0 var(--surface-tint-strong),
+        0 8px 22px -4px color-mix(in oklab, var(--primary), transparent 60%),
+        0 2px 4px color-mix(in oklab, var(--primary), transparent 72%);
+    }
+  }
+
+  .btn-cta-destructive {
+    color: white;
+    border: 1px solid color-mix(in oklab, var(--destructive), transparent 40%);
+    background: linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--destructive), white 12%) 0%,
+      var(--destructive) 100%
+    );
+    box-shadow:
+      inset 0 1px 0 var(--surface-tint-medium),
+      0 8px 20px -2px color-mix(in oklab, var(--destructive), transparent 65%),
+      0 2px 4px color-mix(in oklab, var(--destructive), transparent 75%);
+  }
+
+  @media (hover: hover) {
+    .btn-cta-destructive:hover {
+      filter: brightness(1.06);
+      background: linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--destructive), white 18%) 0%,
+        color-mix(in oklab, var(--destructive), white 4%) 100%
+      );
+      box-shadow:
+        inset 0 1px 0 var(--surface-tint-strong),
+        0 12px 28px -4px color-mix(in oklab, var(--destructive), transparent 55%),
+        0 2px 6px color-mix(in oklab, var(--destructive), transparent 65%);
+    }
+  }
+
+  .btn-ghost-soft {
+    color: var(--foreground);
+    border: 1px solid transparent;
+    background: transparent;
+    transition:
+      background-color var(--motion-duration-standard) var(--motion-ease-standard),
+      border-color var(--motion-duration-standard) var(--motion-ease-standard),
+      box-shadow var(--motion-duration-standard) var(--motion-ease-standard),
+      color var(--motion-duration-standard) var(--motion-ease-standard);
+  }
+
+  @media (hover: hover) {
+    .btn-ghost-soft:hover {
+      background: color-mix(in oklab, var(--primary), transparent 92%);
+      border-color: color-mix(in oklab, var(--primary), transparent 78%);
+      color: color-mix(in oklab, var(--primary), var(--foreground) 35%);
+    }
+  }
+
+  .btn-ghost-destructive {
+    color: var(--foreground);
+    border: 1px solid transparent;
+    background: transparent;
+    transition:
+      background-color var(--motion-duration-standard) var(--motion-ease-standard),
+      border-color var(--motion-duration-standard) var(--motion-ease-standard),
+      box-shadow var(--motion-duration-standard) var(--motion-ease-standard),
+      color var(--motion-duration-standard) var(--motion-ease-standard);
+  }
+
+  @media (hover: hover) {
+    .btn-ghost-destructive:hover {
+      background: color-mix(in oklab, var(--destructive), transparent 90%);
+      border-color: color-mix(in oklab, var(--destructive), transparent 75%);
+      color: var(--destructive);
+    }
+  }
+
+  .btn-cta-ghost {
+    color: var(--foreground);
+    border: 1px solid color-mix(in oklab, var(--card), transparent 30%);
+    background: linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--card), transparent 18%) 0%,
+      color-mix(in oklab, var(--card), transparent 58%) 100%
+    );
+    box-shadow:
+      0 0 0 1px color-mix(in oklab, var(--shadow-color), transparent 94%),
+      inset 0 1px 0 var(--surface-tint-strong),
+      inset 0 -1px 0 color-mix(in oklab, var(--shadow-color), transparent 96%),
+      0 1px 2px color-mix(in oklab, var(--shadow-color), transparent 95%),
+      0 8px 20px -4px color-mix(in oklab, var(--shadow-color), transparent 86%),
+      0 2px 4px color-mix(in oklab, var(--shadow-color), transparent 94%);
+  }
+
+  @media (hover: hover) {
+    .btn-cta-ghost:hover {
+      filter: brightness(1.06);
+      border-color: color-mix(in oklab, var(--card), transparent 15%);
+      background: linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--card), transparent 8%) 0%,
+        color-mix(in oklab, var(--card), transparent 40%) 100%
+      );
+      box-shadow:
+        0 0 0 1px color-mix(in oklab, var(--shadow-color), transparent 91%),
+        inset 0 1px 0 var(--surface-tint-strong),
+        inset 0 -1px 0 color-mix(in oklab, var(--shadow-color), transparent 95%),
+        0 12px 26px -6px color-mix(in oklab, var(--shadow-color), transparent 78%),
+        0 2px 6px color-mix(in oklab, var(--shadow-color), transparent 92%);
+    }
+  }
+
+  .link-underline-slide {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-repeat: no-repeat;
+    background-size: 0 1.5px;
+    background-position: 0 100%;
+    transition:
+      background-size var(--motion-duration-standard) var(--motion-ease-standard),
+      color var(--motion-duration-quick) var(--motion-ease-standard);
+  }
+
+  @media (hover: hover) {
+    .link-underline-slide:hover {
+      background-size: 100% 1.5px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .link-underline-slide {
+      transition: none;
+    }
+  }
+
+  .hover-glass-tint {
+    transition:
+      background-color var(--motion-duration-quick) var(--motion-ease-standard),
+      border-color var(--motion-duration-quick) var(--motion-ease-standard),
+      color var(--motion-duration-quick) var(--motion-ease-standard);
+  }
+
+  @media (hover: hover) {
+    .hover-glass-tint:hover {
+      background-color: oklch(from var(--glass-bg-color) l c h / calc(var(--glass-tint) + 0.06));
+    }
+  }
+
+  /* Soft hover для glass-поверхностей: tint + primary-ring.
+     ::after над элементом (см. .glass-hover): иначе backdrop-filter родителя
+     сэмплит opacity-fade дискретно и тинт меняется ступеньками. */
+  .glass-soft-hover {
+    position: relative;
+  }
+
+  .glass-soft-hover::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--motion-duration-elevated) linear;
+    background-color: oklch(from var(--glass-bg-color) l c h / 0.08);
+    box-shadow:
+      var(--glass-halo),
+      0 0 0 1px color-mix(in oklab, var(--primary), transparent 78%);
+  }
+
+  @media (hover: hover) {
+    .glass-soft-hover:hover::after {
+      opacity: 1;
+      transition-duration: var(--motion-duration-standard);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .glass-soft-hover::after {
+      transition: none;
+    }
+  }
+
+  /* Базовый chip держит свой gradient/shadow статично; hover-стек (плотнее
+     fill + усиленные drop-shadow'ы + ярче gloss) живёт на ::after и
+     кросс-фейдит по opacity. ::after поверх элемента (см. .glass-hover) —
+     иначе backdrop-filter сэмплит opacity-fade ступеньками. */
+  .chip-glass-ghost {
+    position: relative;
+    color: var(--foreground);
+    border: 1px solid color-mix(in oklab, var(--card), transparent 30%);
+    background: linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--card), transparent 18%) 0%,
+      color-mix(in oklab, var(--card), transparent 58%) 100%
+    );
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+    backdrop-filter: blur(12px) saturate(140%);
+    box-shadow:
+      0 0 0 1px color-mix(in oklab, var(--shadow-color), transparent 94%),
+      inset 0 1px 0 var(--surface-tint-strong),
+      inset 0 -1px 0 color-mix(in oklab, var(--shadow-color), transparent 96%),
+      0 1px 2px color-mix(in oklab, var(--shadow-color), transparent 95%),
+      0 8px 20px -4px color-mix(in oklab, var(--shadow-color), transparent 86%),
+      0 2px 4px color-mix(in oklab, var(--shadow-color), transparent 94%);
+    transition: transform var(--motion-duration-elevated) var(--motion-ease-standard);
+  }
+
+  /* Без background — ::after поверх элемента, gradient перекрыл бы текст chip.
+     Hover-усиление читается через теневой стек: outer drop усилен + добавлен
+     яркий gloss. */
+  .chip-glass-ghost::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--motion-duration-elevated) linear;
+    box-shadow:
+      0 0 0 1px color-mix(in oklab, var(--shadow-color), transparent 91%),
+      inset 0 1px 0 var(--surface-tint-strong),
+      inset 0 -1px 0 color-mix(in oklab, var(--shadow-color), transparent 95%),
+      0 12px 26px -6px color-mix(in oklab, var(--shadow-color), transparent 78%),
+      0 2px 6px color-mix(in oklab, var(--shadow-color), transparent 92%);
+  }
+
+  @media (hover: hover) {
+    .chip-glass-ghost:hover {
+      transform: translateY(-1px);
+      transition-duration: var(--motion-duration-standard);
+    }
+    .chip-glass-ghost:hover::after {
+      opacity: 1;
+      transition-duration: var(--motion-duration-standard);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .chip-glass-ghost,
+    .chip-glass-ghost::after {
+      transition: none;
+    }
+    .chip-glass-ghost:hover {
+      transform: none;
+    }
+  }
+
+  .badge-chip-primary,
+  .badge-chip-secondary,
+  .badge-chip-destructive {
+    box-shadow: inset 0 1px 0 var(--surface-tint-weak);
+    transition:
+      filter var(--motion-duration-quick) var(--motion-ease-standard),
+      box-shadow var(--motion-duration-quick) var(--motion-ease-standard);
+  }
+
+  .badge-chip-secondary {
+    box-shadow: inset 0 1px 0 var(--surface-tint-medium);
+  }
+
+  @media (hover: hover) {
+    .badge-chip-primary:hover {
+      filter: brightness(1.06);
+      box-shadow:
+        inset 0 1px 0 var(--surface-tint-strong),
+        0 6px 16px color-mix(in oklab, var(--primary), transparent 70%);
+    }
+
+    .badge-chip-secondary:hover {
+      filter: brightness(1.04);
+      box-shadow:
+        inset 0 1px 0 var(--surface-tint-strong),
+        0 6px 16px color-mix(in oklab, var(--secondary), transparent 70%);
+    }
+
+    .badge-chip-destructive:hover {
+      filter: brightness(1.06);
+      box-shadow:
+        inset 0 1px 0 var(--surface-tint-strong),
+        0 6px 16px color-mix(in oklab, var(--destructive), transparent 70%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .badge-chip-primary,
+    .badge-chip-secondary,
+    .badge-chip-destructive {
+      transition: none;
+    }
+  }
+
+  /* Grounds switch thumb on translucent track in both states. */
+  [data-slot="switch-thumb"] {
+    box-shadow: 0 1px 2px color-mix(in oklab, var(--shadow-color), transparent 70%);
+  }
+
+  [data-slot="table-container"][data-density="compact"] [data-slot="table-head"] {
+    height: 2rem;
+    font-size: 0.75rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  [data-slot="table-container"][data-density="compact"] [data-slot="table-cell"] {
+    padding: 0.375rem 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  [data-slot="table-container"][data-density="comfortable"] [data-slot="table-head"] {
+    height: 3rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  [data-slot="table-container"][data-density="comfortable"] [data-slot="table-cell"] {
+    padding: 0.75rem;
+  }
+
+  /* Дублируем плотности на чистых th/td, чтобы Astro-консьюмеры (которые
+     не навешивают data-slot на каждую ячейку, в отличие от React-обёртки)
+     получали тот же ритм через одно атрибут на контейнере. */
+  [data-slot="table-container"][data-density="compact"] thead th {
+    height: 2rem;
+    font-size: 0.75rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  [data-slot="table-container"][data-density="compact"] tbody td,
+  [data-slot="table-container"][data-density="compact"] tbody th {
+    padding: 0.375rem 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  [data-slot="table-container"][data-density="comfortable"] thead th {
+    height: 3rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  [data-slot="table-container"][data-density="comfortable"] tbody td,
+  [data-slot="table-container"][data-density="comfortable"] tbody th {
+    padding: 0.75rem;
+  }
+
+  /* Premium flagship treatment. Layered amber rim + tinted drop-halo + inset gloss.
+     Stacks on top of any btn-cta-* base without overriding its box-shadow:
+       - inner hairline lives on the element via `outline`
+       - outer ring + drop-halo live on ::before (z:-1)
+       - top gloss lives on ::after (z:1, blend-mode safe over fills)
+     No infinite animations, no filter:blur — hover transitions the halo. */
+  .btn-cta-flagship {
+    position: relative;
+    isolation: isolate;
+    outline: 1px solid color-mix(in oklab, var(--accent), transparent 30%);
+    outline-offset: -1px;
+  }
+
+  .btn-cta-flagship::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: -1;
+    box-shadow:
+      0 0 0 2px color-mix(in oklab, var(--accent), transparent 78%),
+      0 0 18px -2px color-mix(in oklab, var(--accent), transparent 58%),
+      0 14px 36px -6px color-mix(in oklab, var(--accent), transparent 62%);
+    transition: box-shadow var(--motion-duration-elevated) var(--motion-ease-standard);
+  }
+
+  .btn-cta-flagship::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 1;
+    background: linear-gradient(180deg, var(--surface-tint-medium) 0%, transparent 46%);
+    opacity: 0.55;
+  }
+
+  @media (hover: hover) {
+    .btn-cta-flagship:hover::before {
+      box-shadow:
+        0 0 0 2.5px color-mix(in oklab, var(--accent), transparent 66%),
+        0 0 28px 0 color-mix(in oklab, var(--accent), transparent 42%),
+        0 20px 48px -4px color-mix(in oklab, var(--accent), transparent 52%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn-cta-flagship::before {
+      transition: none;
+    }
+  }
+
+  .skeleton-shimmer {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    background-color: color-mix(in oklab, var(--foreground), transparent 90%);
+  }
+
+  .skeleton-shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--surface-tint-medium) 50%,
+      transparent 100%
+    );
+    animation: skeleton-shimmer 1.6s ease-in-out infinite;
+    animation-delay: calc(var(--i, 0) * 80ms);
+    pointer-events: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .skeleton-shimmer::after {
+      animation: none;
+    }
+  }
+
+  @keyframes skeleton-shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  /* Aurora ambient: хаотичный ПЕРЕЛИВАЮЩИЙСЯ туман в тёплой паре accent (amber)
+     + success (emerald) — НЕ brand-blue. app-backdrop cloud-field сине-
+     доминантен, синяя aurora читалась бы как продолжение фона; тёплое-на-
+     холодном даёт figure/ground. Каждый pseudo на z:-1 (painting-order: pos
+     < -1 paints after own bg, before text) — текст не вуалится. Стэкается
+     поверх любого .glass*: glass-halo родителя на element box, туман — pseudo box.
+
+     ПЕРЕЛИВ, не направленный градиент: каждый pseudo несёт ОДИН amber + ОДИН
+     emerald блоб (4 всего, hue вперемешку — не «amber-угол / emerald-угол»).
+     Блобы блуждают ЗАМКНУТЫМИ петлями (keyframe 0/25/50/75/100, разные waypoints
+     по слою) в разные стороны → нет оси «снизу-вверх», зоны смешения hue мигрируют
+     = перелив. Плюс opacity двух pseudo в противофазе → доминанта warm↔green
+     медленно дышит. Falloff мягкий (transparent ~74%), центры частично за кадром
+     (bg-size >150%) — нет кромки-диска. Containment: pseudo `inset: 0` (не вылезает
+     за панель без overflow-hidden) + 1px top-gloss на ::before.
+
+     Тихо но видно: alpha низкая (перелив влит в frost, не поверх), периоды 31s +
+     43s — оба простые, coprime, НОК ≈ 22мин; их разный период раскачивает и сам
+     crossfade доминанты = доп. органика. Малая амплитуда дрейфа.
+
+     Рандом per-instance: `--aurora-seed` (число, default 0) сдвигает фазу через
+     отрицательный animation-delay, у каждого слоя свой множитель → две
+     поверхности на одном экране (header pill vs hero) не идут в ногу. Без seed
+     одиночная поверхность работает как есть. prefers-reduced-motion фризит в
+     off-center статике (web.dev consensus: reduce, not none). */
+  .ambient-aurora {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .ambient-aurora::before,
+  .ambient-aurora::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: -1;
+    background-repeat: no-repeat;
+  }
+
+  .ambient-aurora::before {
+    background-image:
+      radial-gradient(ellipse 56% 52% at 45% 45%, var(--ambient-aurora-1) 0%, transparent 72%),
+      radial-gradient(ellipse 52% 56% at 55% 55%, var(--ambient-aurora-2) 0%, transparent 75%);
+    background-size:
+      200% 200%,
+      200% 200%;
+    background-position:
+      18% 22%,
+      80% 74%;
+    box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.08);
+    animation: ambient-fog-1 31s ease-in-out infinite;
+    animation-delay: calc(var(--aurora-seed, 0) * -6.1s);
+  }
+
+  .ambient-aurora::after {
+    background-image:
+      radial-gradient(ellipse 54% 56% at 56% 44%, var(--ambient-aurora-2) 0%, transparent 73%),
+      radial-gradient(ellipse 56% 52% at 44% 56%, var(--ambient-aurora-1) 0%, transparent 76%);
+    background-size:
+      200% 200%,
+      200% 200%;
+    background-position:
+      76% 24%,
+      24% 78%;
+    animation: ambient-fog-2 43s ease-in-out infinite;
+    animation-delay: calc(var(--aurora-seed, 0) * -8.7s);
+  }
+
+  /* Широкие замкнутые петли по всем квадрантам: каждый слой обходит TL→R→BR→L,
+     два слоя МЕНЯЮТСЯ сторонами в цикле — не прибиты слева/справа. bg-size 200%
+     даёт ход на всю площадь; пересечения amber/emerald мигрируют = перелив. */
+  @keyframes ambient-fog-1 {
+    0%,
+    100% {
+      background-position:
+        18% 22%,
+        80% 74%;
+      opacity: 0.9;
+    }
+    25% {
+      background-position:
+        68% 56%,
+        40% 30%;
+    }
+    50% {
+      background-position:
+        82% 78%,
+        20% 52%;
+      opacity: 1;
+    }
+    75% {
+      background-position:
+        34% 68%,
+        64% 22%;
+    }
+  }
+
+  /* opacity в противофазе к fog-1 → доминанта warm↔green дышит. */
+  @keyframes ambient-fog-2 {
+    0%,
+    100% {
+      background-position:
+        76% 24%,
+        24% 78%;
+      opacity: 0.95;
+    }
+    25% {
+      background-position:
+        36% 58%,
+        64% 42%;
+    }
+    50% {
+      background-position:
+        20% 80%,
+        80% 20%;
+      opacity: 0.72;
+    }
+    75% {
+      background-position:
+        66% 40%,
+        30% 60%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ambient-aurora::before,
+    .ambient-aurora::after {
+      animation: none;
+    }
+    .ambient-aurora::before {
+      background-position:
+        34% 38%,
+        62% 58%;
+      opacity: 0.92;
+    }
+    .ambient-aurora::after {
+      background-position:
+        66% 36%,
+        36% 66%;
+      opacity: 0.82;
+    }
+  }
+}
+
+/* Tone API. Re-points --tone-color (default: primary, declared in ui-tokens/theme)
+   and tints the glass surface tokens. Applied to any element with
+   [data-tone="info|success|warning|error"]; descendant `.glass*` utilities
+   pick up the override through CSS variables. Default light/dark surfaces
+   stay untouched when no data-tone is set — no regression. */
+[data-tone="info"] {
+  --tone-color: var(--primary);
+}
+[data-tone="success"] {
+  --tone-color: var(--success);
+}
+[data-tone="warning"] {
+  --tone-color: var(--warning);
+}
+[data-tone="error"] {
+  --tone-color: var(--destructive);
+}
+
+:root [data-tone] {
+  --glass-bg-color: color-mix(in oklab, oklch(1 0 0), var(--tone-color) 28%);
+  --glass-tint: 0.8;
+  --glass-tint-weak: 0.62;
+  --glass-tint-strong: 0.88;
+  --glass-border-color: color-mix(in oklab, var(--tone-color), transparent 48%);
+  --glass-halo:
+    0 1px 2px color-mix(in oklab, var(--shadow-color), transparent 88%),
+    0 22px 48px -18px color-mix(in oklab, var(--tone-color), transparent 58%);
+  --glass-hover-halo-color: var(--tone-color);
+  --toast-accent: var(--tone-color);
+}
+
+/* Dark tone: chromatic tones disappear when mixed with a hue-biased dark base
+   (e.g. neutral-950 sits around hue 260). Mix `--tone-color` (52%) with a *pure
+   neutral* dark (48%) so chroma survives the darkening but stops dominating;
+   tint pulled back to 0.8 so the app-backdrop bleeds through enough to read
+   as glass instead of solid-colored block. */
+.dark [data-tone] {
+  --glass-bg-color: color-mix(in oklab, var(--tone-color), oklch(0.18 0 0) 48%);
+  --glass-tint: 0.8;
+  --glass-tint-weak: 0.62;
+  --glass-tint-strong: 0.88;
+  --glass-border-color: color-mix(in oklab, var(--tone-color), transparent 34%);
+  --glass-halo:
+    0 1px 2px rgb(0 0 0 / 0.45),
+    0 24px 60px -16px color-mix(in oklab, var(--tone-color), transparent 48%);
+}
+
+/* sonner — floating glass notifications, crystal-based.
+   Rules live at top level (not inside `@layer utilities`) because sonner ships
+   unlayered CSS and any layered rule loses the cascade regardless of selector
+   specificity. Per-variant tint flows through --tone-color, mapped from sonner's
+   own [data-type]: info → primary, success → success, warning → accent,
+   error → destructive, default/loading → muted-foreground.
+   Stack/visibility/positioning quirks handled below — closeButton sits on
+   every stacked toast by sonner's design; hidden on back toasts via
+   [data-front="false"] override. */
+[data-sonner-toaster] [data-sonner-toast].toast-glass {
+  --tone-color: var(--muted-foreground);
+  --toast-accent: var(--tone-color);
+  --toast-bg-tint: 0.62;
+
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.875rem;
+  padding-right: 2.25rem;
+  border-radius: var(--radius-island);
+  color: var(--foreground);
+  background-color: oklch(from var(--glass-bg-color) l c h / var(--toast-bg-tint));
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid var(--glass-border-color);
+  box-shadow:
+    inset 0 1px 0 var(--surface-tint-strong),
+    inset 0 -1px 0 color-mix(in oklab, var(--shadow-color), transparent 95%),
+    0 1px 2px color-mix(in oklab, var(--shadow-color), transparent 90%),
+    0 24px 48px -16px color-mix(in oklab, var(--tone-color), transparent 70%);
+}
+
+/* Per-variant tone mapping — drives bg/border/halo via the [data-tone] rules
+   above by re-pointing --tone-color and the same glass tokens. */
+[data-sonner-toaster] [data-sonner-toast].toast-glass[data-type="info"] {
+  --tone-color: var(--primary);
+}
+[data-sonner-toaster] [data-sonner-toast].toast-glass[data-type="success"] {
+  --tone-color: var(--success);
+}
+[data-sonner-toaster] [data-sonner-toast].toast-glass[data-type="warning"] {
+  --tone-color: var(--warning);
+}
+[data-sonner-toaster] [data-sonner-toast].toast-glass[data-type="error"] {
+  --tone-color: var(--destructive);
+}
+
+/* Tinted glass background for status variants — mirrors the global
+   [data-tone] mix policy so a toast with data-type="warning" looks the same
+   as a banner with data-tone="warning". Light: white-base + tone mix; dark:
+   tone-as-base darkened, so chroma survives the frost. */
+:root
+  [data-sonner-toaster]
+  [data-sonner-toast].toast-glass:where(
+    [data-type="info"],
+    [data-type="success"],
+    [data-type="warning"],
+    [data-type="error"]
+  ) {
+  --glass-bg-color: color-mix(in oklab, oklch(1 0 0), var(--tone-color) 22%);
+  --glass-border-color: color-mix(in oklab, var(--tone-color), transparent 46%);
+  --toast-bg-tint: 0.66;
+}
+.dark
+  [data-sonner-toaster]
+  [data-sonner-toast].toast-glass:where(
+    [data-type="info"],
+    [data-type="success"],
+    [data-type="warning"],
+    [data-type="error"]
+  ) {
+  --glass-bg-color: color-mix(in oklab, var(--tone-color), oklch(0.22 0 0) 56%);
+  --glass-border-color: color-mix(in oklab, var(--tone-color), transparent 34%);
+  --toast-bg-tint: 0.62;
+}
+
+[data-sonner-toaster] [data-sonner-toast].toast-glass [data-icon] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  margin: 0;
+  flex-shrink: 0;
+  border-radius: 9999px;
+  background-color: color-mix(in oklab, var(--tone-color), transparent 82%);
+  color: var(--tone-color);
+}
+
+[data-sonner-toaster] [data-sonner-toast].toast-glass [data-icon] > svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+[data-sonner-toaster] [data-sonner-toast].toast-glass [data-content] {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-top: 0.25rem;
+}
+
+[data-sonner-toaster] [data-sonner-toast].toast-glass [data-title] {
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: -0.005em;
+  color: var(--foreground);
+}
+
+[data-sonner-toaster] [data-sonner-toast].toast-glass [data-description] {
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--muted-foreground);
+}
+
+[data-sonner-toaster] [data-sonner-toast].toast-glass [data-button] {
+  height: 1.75rem;
+  padding: 0 0.75rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--foreground);
+  background: color-mix(in oklab, var(--toast-accent), transparent 84%);
+  border: 1px solid color-mix(in oklab, var(--toast-accent), transparent 68%);
+  transition:
+    background-color var(--motion-duration-quick) var(--motion-ease-standard),
+    border-color var(--motion-duration-quick) var(--motion-ease-standard);
+}
+
+@media (hover: hover) {
+  [data-sonner-toaster] [data-sonner-toast].toast-glass [data-button]:hover {
+    background: color-mix(in oklab, var(--toast-accent), transparent 72%);
+    border-color: color-mix(in oklab, var(--toast-accent), transparent 52%);
+  }
+}
+
+[data-sonner-toaster] [data-sonner-toast].toast-glass [data-cancel] {
+  height: 1.75rem;
+  padding: 0 0.75rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--muted-foreground);
+  background: transparent;
+  border: 1px solid transparent;
+  transition:
+    background-color var(--motion-duration-quick) var(--motion-ease-standard),
+    color var(--motion-duration-quick) var(--motion-ease-standard);
+}
+
+@media (hover: hover) {
+  [data-sonner-toaster] [data-sonner-toast].toast-glass [data-cancel]:hover {
+    background: color-mix(in oklab, var(--foreground), transparent 92%);
+    color: var(--foreground);
+  }
+}
+
+/* sonner positions [data-close-button] absolutely and ships its own
+   --gap/--width vars; the button is not under the `> *` selector that hides
+   stacked back toasts (sonner #747). Right-align and hide on back-toasts. */
+[data-sonner-toaster] [data-sonner-toast].toast-glass [data-close-button] {
+  left: auto;
+  right: 0.625rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 9999px;
+  background: color-mix(in oklab, var(--foreground), transparent 94%);
+  border-color: transparent;
+  color: var(--muted-foreground);
+  transition:
+    background-color var(--motion-duration-quick) var(--motion-ease-standard),
+    color var(--motion-duration-quick) var(--motion-ease-standard),
+    opacity var(--motion-duration-quick) var(--motion-ease-standard);
+}
+
+@media (hover: hover) {
+  [data-sonner-toaster] [data-sonner-toast].toast-glass [data-close-button]:hover {
+    background: color-mix(in oklab, var(--foreground), transparent 88%);
+    color: var(--foreground);
+  }
+}
+
+/* Hide closeButton on collapsed back toasts — sonner renders it on every
+   stacked item, including those visually behind the front one. */
+[data-sonner-toaster]
+  [data-sonner-toast].toast-glass[data-front="false"][data-expanded="false"]
+  [data-close-button] {
+  opacity: 0;
+  pointer-events: none;
+}

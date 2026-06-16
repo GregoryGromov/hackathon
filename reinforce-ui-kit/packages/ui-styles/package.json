@@ -1,0 +1,38 @@
+{
+  "name": "@reinforce/ui-styles",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./globals.css": "./src/globals/index.css",
+    "./effects.css": "./src/effects/index.css",
+    "./cn": "./src/cn/index.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "test": "vitest run --passWithNoTests",
+    "test:coverage": "vitest run --coverage --passWithNoTests",
+    "test:watch": "vitest",
+    "typecheck": "tsc",
+    "fonts:fallbacks": "node scripts/gen-font-fallbacks.mjs"
+  },
+  "dependencies": {
+    "@reinforce/ui-tokens": "workspace:*",
+    "clsx": "catalog:",
+    "tailwind-merge": "catalog:",
+    "tw-animate-css": "catalog:"
+  },
+  "peerDependencies": {
+    "tailwindcss": "catalog:"
+  },
+  "devDependencies": {
+    "@capsizecss/metrics": "catalog:",
+    "@capsizecss/unpack": "catalog:",
+    "@reinforce/tsconfig": "workspace:*",
+    "@vitest/coverage-v8": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

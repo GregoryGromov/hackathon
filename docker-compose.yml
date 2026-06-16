@@ -1,0 +1,55 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  web:
+    build:
+      context: .
+    restart: unless-stopped
+    working_dir: ${HOST_PROJECT_DIR}
+    command: ["sh", "${HOST_PROJECT_DIR}/docker/web-entrypoint.sh"]
+    env_file:
+      - .env
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ${HOST_PROJECT_DIR}:${HOST_PROJECT_DIR}
+    ports:
+      - "8000:8000"
+
+  worker:
+    build:
+      context: .
+    restart: unless-stopped
+    working_dir: ${HOST_PROJECT_DIR}
+    command: ["sh", "${HOST_PROJECT_DIR}/docker/worker-entrypoint.sh"]
+    env_file:
+      - .env
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ${HOST_PROJECT_DIR}:${HOST_PROJECT_DIR}
+      - /var/run/docker.sock:/var/run/docker.sock
+
+volumes:
+  postgres_data:

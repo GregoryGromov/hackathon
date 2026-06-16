@@ -1,0 +1,26 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.DS_Store
+.env
+.venv/
+db.sqlite3
+media/
+shared/
+staticfiles/
+datasets/*.parquet
+
+# JS/monorepo artifacts
+node_modules/
+.pnpm-store/
+.turbo/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+*.log
+
+# Editor / local tooling
+.idea/
+.vscode/
+.playwright-mcp/

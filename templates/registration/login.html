@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Login | Overnight Finance Arena{% endblock %}
+
+{% block content %}
+<section class="card narrow auth-card">
+    <h1>Login</h1>
+    <p class="muted">Sign in with your confirmed email.</p>
+    <form method="post" class="form-stack">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        {% for field in form %}
+            <label class="field">
+                <span>{{ field.label }}</span>
+                {{ field }}
+                {{ field.errors }}
+            </label>
+        {% endfor %}
+        <button type="submit" class="button">Sign in</button>
+    </form>
+    <p class="muted">No account yet? <a href="{% url 'register' %}">Register</a>.</p>
+</section>
+{% endblock %}

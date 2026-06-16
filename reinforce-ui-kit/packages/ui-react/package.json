@@ -1,0 +1,75 @@
+{
+  "name": "@reinforce/ui-react",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./accordion": "./src/accordion/index.tsx",
+    "./alert": "./src/alert/index.tsx",
+    "./avatar": "./src/avatar/index.tsx",
+    "./badge": "./src/badge/index.tsx",
+    "./button": "./src/button/index.tsx",
+    "./card": "./src/card/index.tsx",
+    "./checkbox": "./src/checkbox/index.tsx",
+    "./collapsible": "./src/collapsible/index.tsx",
+    "./command": "./src/command/index.tsx",
+    "./count-up": "./src/count-up/index.tsx",
+    "./dialog": "./src/dialog/index.tsx",
+    "./dropdown-menu": "./src/dropdown-menu/index.tsx",
+    "./hover-card": "./src/hover-card/index.tsx",
+    "./input": "./src/input/index.tsx",
+    "./kbd": "./src/kbd/index.tsx",
+    "./label": "./src/label/index.tsx",
+    "./markdown-prose": "./src/markdown-prose/index.tsx",
+    "./popover": "./src/popover/index.tsx",
+    "./progress": "./src/progress/index.tsx",
+    "./radio-group": "./src/radio-group/index.tsx",
+    "./scroll-area": "./src/scroll-area/index.tsx",
+    "./select": "./src/select/index.tsx",
+    "./separator": "./src/separator/index.tsx",
+    "./sheet": "./src/sheet/index.tsx",
+    "./skeleton": "./src/skeleton/index.tsx",
+    "./sonner": "./src/sonner/index.tsx",
+    "./switch": "./src/switch/index.tsx",
+    "./table": "./src/table/index.tsx",
+    "./tabs": "./src/tabs/index.tsx",
+    "./textarea": "./src/textarea/index.tsx",
+    "./toggle": "./src/toggle/index.tsx",
+    "./tooltip": "./src/tooltip/index.tsx",
+    "./typography": "./src/typography/index.tsx"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "test": "vitest run --passWithNoTests",
+    "test:coverage": "vitest run --coverage --passWithNoTests",
+    "test:watch": "vitest",
+    "typecheck": "tsc",
+    "lint": "eslint src"
+  },
+  "dependencies": {
+    "@reinforce/ui-primitives": "workspace:*",
+    "@reinforce/ui-styles": "workspace:*",
+    "lucide-react": "catalog:",
+    "radix-ui": "catalog:",
+    "react-markdown": "catalog:",
+    "sonner": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@reinforce/tsconfig": "workspace:*",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@typescript-eslint/parser": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "eslint": "catalog:",
+    "eslint-plugin-react-hooks": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

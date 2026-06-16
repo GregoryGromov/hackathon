@@ -1,0 +1,30 @@
+<div class="prose">
+    <div class="task-download-card">
+        <div>
+            <span class="eyebrow">Task data</span>
+            <strong>Download dataset for local development</strong>
+            <p class="muted">
+                Parquet file with anonymized market-state features{% if task_data_download_size %},
+                    {{ task_data_download_size }}{% endif %}.
+            </p>
+        </div>
+        <a class="button secondary task-download-button" href="{% url 'task-data-download' %}">
+            Download data
+        </a>
+    </div>
+
+    <p>Build a model that predicts target values from sequential market-state data.</p>
+    <ul>
+        <li>Your ZIP must contain exactly one <code>solution.py</code>.</li>
+        <li><code>solution.py</code> must define a <code>PredictionModel</code> class.</li>
+        <li>The scorer creates the model and calls <code>predict(data_point)</code> step by step.</li>
+    </ul>
+    <p>The dataset contains anonymized market-state features.</p>
+    <ul>
+        <li><code>datasets/train.parquet</code> for local training.</li>
+        <li><code>datasets/valid.parquet</code> for validation.</li>
+        <li>The hidden scorer runs the same model API on private parquet data.</li>
+    </ul>
+    <p>When <code>data_point.need_prediction</code> is false, return <code>None</code>. When it is true, return a numeric array with shape <code>(2,)</code>.</p>
+    <p>Final metric: <code>mean weighted Pearson correlation</code>.</p>
+</div>

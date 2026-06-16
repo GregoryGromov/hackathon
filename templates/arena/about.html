@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}About | Overnight Finance Arena{% endblock %}
+
+{% block content %}
+<section class="about-layout">
+    <section class="card about-hero">
+        <p class="section-kicker">About</p>
+        <h1>{{ challenge_name }}</h1>
+        <p class="about-lede">{{ challenge_summary }}</p>
+
+        <div class="about-quick-facts">
+            <div class="meta-tile">
+                <span class="eyebrow">Organizer</span>
+                <strong>Reinforce.fi</strong>
+            </div>
+            <div class="meta-tile">
+                <span class="eyebrow">Format</span>
+                <strong>Solo</strong>
+                <p class="muted">Competition-style challenge</p>
+            </div>
+            <div class="meta-tile">
+                <span class="eyebrow">Challenge</span>
+                <strong>Quant / ML</strong>
+                <p class="muted">Market-action prediction</p>
+            </div>
+            <div class="meta-tile">
+                <span class="eyebrow">Payouts</span>
+                <strong>Crypto wallet</strong>
+                <p class="muted">Top-3 prizes in USD equivalent</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="about-grid">
+        <section class="card about-section about-section-wide">
+            <div class="section-header section-header-compact">
+                <div>
+                    <h2>Organizer and challenge</h2>
+                    <p class="muted">What Reinforce.fi does and what this challenge is about.</p>
+                </div>
+            </div>
+            <div class="about-split">
+                <div class="prose">
+                    <p>{{ organizer_summary }}</p>
+                    <p>
+                        The platform uses proprietary reinforcement-learning-driven strategies together
+                        with automated capital allocation to keep liquidity productive around the clock.
+                    </p>
+                </div>
+                <div class="prose">
+                    <p>
+                        Participants build a model that predicts the most profitable market action on
+                        anonymized market-state data.
+                    </p>
+                    <p>
+                        The detailed task description, evaluation logic, and live submission workflow are
+                        handled in the <a href="{% url 'problem' %}">Task</a> section.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="card about-section about-section-wide">
+            <div class="section-header section-header-compact">
+                <div>
+                    <h2>Prizes and timeline</h2>
+                    <p class="muted">Rewards, dates, and final validation flow.</p>
+                </div>
+            </div>
+            <div class="about-split">
+                <div>
+                    <div class="about-prize-list">
+                        {% for prize in prizes %}
+                            <div class="meta-tile about-prize-item">
+                                <span class="eyebrow">{{ prize.place }}</span>
+                                <strong>{{ prize.amount }}</strong>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="prose">
+                    <p>{{ timeline_summary }}</p>
+                    <p>
+                        Finalists may be asked to share their notebook or model code for validation on a
+                        hidden dataset and present their approach online or in person.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="card about-section about-section-wide">
+            <div class="section-header section-header-compact about-community-header">
+                <div>
+                    <h2>Participation and community</h2>
+                    <p class="muted">How to join, where to work, and where to ask questions.</p>
+                </div>
+                <a
+                    class="meta-tile about-community-tile"
+                    href="https://t.me/+R6lMJ10VXP5hOTI0"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Open Telegram community chat"
+                >
+                    <span class="about-community-arrow" aria-hidden="true">↗</span>
+                    <span class="eyebrow">Community</span>
+                    <strong>Telegram chat for announcements and questions</strong>
+                    <p class="muted">Use the community chat for updates, discussion, and challenge support.</p>
+                </a>
+            </div>
+        </section>
+    </div>
+</section>
+{% endblock %}

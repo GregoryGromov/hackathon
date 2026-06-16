@@ -1,0 +1,20 @@
+{
+  "name": "reinforce-ui-kit",
+  "private": true,
+  "packageManager": "pnpm@10.33.2",
+  "engines": {
+    "node": "^22 || ^24"
+  },
+  "scripts": {
+    "test": "turbo run test",
+    "test:coverage": "turbo run test:coverage",
+    "test:watch": "turbo run test:watch",
+    "typecheck": "turbo run typecheck",
+    "check": "biome check --write packages"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.4.13",
+    "turbo": "^2.9.6",
+    "typescript": "catalog:"
+  }
+}

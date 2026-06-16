@@ -1,0 +1,14 @@
+<div class="section-header">
+    <h2>Leaderboard</h2>
+</div>
+<ol class="leaderboard-list">
+    {% for row in leaderboard_rows %}
+        <li>
+            <span>#{{ row.rank }} {{ row.user__username }}</span>
+            <strong>{{ row.best_score }}</strong>
+        </li>
+    {% empty %}
+        <li class="muted">No scored submissions yet.</li>
+    {% endfor %}
+</ol>
+<a class="button secondary" href="{% url 'leaderboard' %}">Open full leaderboard</a>

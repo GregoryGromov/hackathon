@@ -1,0 +1,4 @@
+{
+  "extends": "@reinforce/tsconfig/base.json",
+  "include": ["src"]
+}

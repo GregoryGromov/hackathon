@@ -1,0 +1,246 @@
+@import "@reinforce/ui-tokens/palette.css";
+
+:root {
+  --background: var(--palette-neutral-50);
+  --foreground: var(--palette-neutral-950);
+
+  --card: oklch(0.99 0.005 250);
+  --card-foreground: var(--palette-neutral-950);
+  --popover: oklch(1 0 0);
+  --popover-foreground: var(--palette-neutral-950);
+
+  --primary: var(--palette-blue-600);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: var(--palette-neutral-100);
+  --secondary-foreground: var(--palette-neutral-900);
+  --muted: var(--palette-neutral-100);
+  --muted-foreground: var(--palette-neutral-500);
+  --accent: var(--palette-amber-500);
+  --accent-foreground: oklch(0.2 0.04 70);
+  --destructive: var(--palette-danger-500);
+  --destructive-soft: oklch(from var(--destructive) l c h / 0.1);
+  --success: var(--palette-emerald-600);
+  --success-foreground: oklch(1 0 0);
+  --success-soft: oklch(from var(--success) l c h / 0.1);
+  --warning: oklch(0.715 0.18 50);
+  --warning-foreground: oklch(0.22 0.05 50);
+  --warning-soft: oklch(from var(--warning) l c h / 0.1);
+
+  --border: var(--palette-neutral-200);
+  --input: var(--palette-neutral-200);
+  --input-bg: transparent;
+  --input-bg-hover: oklch(from var(--accent) l c h / 0.06);
+  --ring: var(--palette-blue-600);
+  --ring-destructive: oklch(from var(--destructive) l c h / 0.2);
+  --ring-success: oklch(from var(--success) l c h / 0.2);
+  --ring-warning: oklch(from var(--warning) l c h / 0.2);
+
+  /* Tone API: any element with [data-tone="warning|error|success|info"]
+     re-points this variable; glass surfaces and toast variants pick it up
+     for background mix, border tint, and colored halo. Default = primary,
+     so existing `.glass*` surfaces are unchanged. */
+  --tone-color: var(--primary);
+
+  --overlay: oklch(0 0 0 / 0.4);
+
+  --switch-track: var(--palette-neutral-200);
+  --switch-track-checked: var(--primary);
+  --switch-thumb: oklch(0.995 0 0);
+  --switch-thumb-checked: oklch(1 0 0);
+
+  --chart-1: var(--palette-blue-500);
+  --chart-2: var(--palette-amber-500);
+  --chart-3: var(--palette-blue-700);
+  --chart-4: var(--palette-neutral-500);
+  --chart-5: var(--palette-danger-500);
+
+  --sidebar: var(--palette-neutral-50);
+  --sidebar-foreground: var(--palette-neutral-950);
+  --sidebar-primary: var(--palette-blue-600);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: var(--palette-neutral-100);
+  --sidebar-accent-foreground: var(--palette-neutral-900);
+  --sidebar-border: var(--palette-neutral-200);
+  --sidebar-ring: var(--palette-blue-600);
+
+  --radius: 0.875rem;
+  --radius-control: 0.5rem;
+  --radius-island: 0.75rem;
+  --radius-card: 1rem;
+  --radius-pill: 9999px;
+
+  --motion-duration-quick: 150ms;
+  --motion-duration-standard: 220ms;
+  --motion-duration-elevated: 320ms;
+  --motion-duration-relaxed: 520ms;
+  --motion-ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --motion-ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --glow-primary-color: var(--primary);
+  --glow-accent-color: var(--accent);
+
+  --accent-soft: oklch(from var(--accent) l c h / 0.1);
+  --accent-soft-strong: oklch(from var(--accent) l c h / 0.18);
+  --border-accent-soft: oklch(from var(--accent) l c h / 0.28);
+
+  --elevation-rest:
+    0 1px 2px color-mix(in oklab, var(--shadow-color), transparent 92%),
+    0 6px 16px -6px color-mix(in oklab, var(--shadow-color), transparent 90%);
+  --elevation-hover:
+    0 2px 4px color-mix(in oklab, var(--shadow-color), transparent 90%),
+    0 12px 28px -8px color-mix(in oklab, var(--shadow-color), transparent 82%),
+    0 0 0 1px color-mix(in oklab, var(--primary), transparent 88%);
+  --elevation-floating:
+    0 4px 8px color-mix(in oklab, var(--shadow-color), transparent 88%),
+    0 24px 48px -12px color-mix(in oklab, var(--shadow-color), transparent 78%);
+  --elevation-modal:
+    0 8px 16px color-mix(in oklab, var(--shadow-color), transparent 84%),
+    0 40px 80px -16px color-mix(in oklab, var(--shadow-color), transparent 70%);
+
+  --surface-tint-strong: oklch(1 0 0 / 0.35);
+  --surface-tint-medium: oklch(1 0 0 / 0.24);
+  --surface-tint-soft: oklch(1 0 0 / 0.2);
+  --surface-tint-weak: oklch(1 0 0 / 0.16);
+  --shadow-color: var(--palette-neutral-900);
+  --glass-hover-halo-color: var(--accent);
+
+  /* Aurora ambient on .glass surfaces — two drifting radial blobs. Hue duo is
+     deliberately WARM (accent amber + success emerald), NOT brand blue: the
+     app-backdrop cloud field is blue-dominant, so a blue aurora reads as more
+     backdrop. Warm-on-cold gives instant figure/ground — the surface owns its
+     own light. Alphas per theme: light glass is white-ish, so chroma sits fine
+     at lower alpha; dark glass needs a touch more to register. */
+  --ambient-aurora-1: color-mix(in oklab, var(--accent), transparent 90%);
+  --ambient-aurora-2: color-mix(in oklab, var(--success), transparent 92%);
+
+  --glass-bg-color: color-mix(in oklab, oklch(1 0 0), var(--primary) 4%);
+  --glass-border-color: color-mix(in oklab, var(--foreground), transparent 88%);
+  --glass-tint: 0.38;
+  --glass-tint-weak: 0.42;
+  --glass-tint-strong: 0.85;
+  --glass-blur: 28px;
+  --glass-blur-weak: 16px;
+  --glass-border-a: 0.43;
+  --glass-halo:
+    0 1px 2px rgb(15 23 42 / 0.06),
+    0 18px 40px -18px color-mix(in oklab, var(--primary), transparent 78%);
+
+  --backdrop-1: color-mix(in oklab, var(--palette-amber-500), transparent 78%);
+  --backdrop-2: color-mix(in oklab, var(--palette-blue-500), transparent 88%);
+  --backdrop-3: color-mix(in oklab, var(--palette-blue-300), transparent 80%);
+  --backdrop-4: color-mix(in oklab, var(--accent), transparent 84%);
+  --backdrop-5: color-mix(in oklab, var(--accent), transparent 90%);
+  --backdrop-base-top: rgb(246 248 252 / 0.94);
+  --backdrop-base-bottom: rgb(240 244 250 / 0.94);
+  --backdrop-noise-opacity: 0.07;
+}
+
+.dark {
+  --background: var(--palette-neutral-950);
+  --foreground: var(--palette-neutral-100);
+
+  --card: var(--palette-neutral-900);
+  --card-foreground: var(--palette-neutral-100);
+  --popover: var(--palette-neutral-900);
+  --popover-foreground: var(--palette-neutral-100);
+
+  --primary: var(--palette-blue-500);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: var(--palette-neutral-800);
+  --secondary-foreground: var(--palette-neutral-100);
+  --muted: var(--palette-neutral-800);
+  --muted-foreground: var(--palette-neutral-400);
+  --accent: var(--palette-amber-400);
+  --accent-foreground: oklch(0.18 0.04 70);
+  --destructive: var(--palette-danger-400);
+  --destructive-soft: oklch(from var(--destructive) l c h / 0.2);
+  --success: var(--palette-emerald-400);
+  --success-foreground: oklch(0.16 0.04 165);
+  --success-soft: oklch(from var(--success) l c h / 0.2);
+  --warning: oklch(0.78 0.165 50);
+  --warning-foreground: oklch(0.18 0.05 50);
+  --warning-soft: oklch(from var(--warning) l c h / 0.2);
+
+  --border: oklch(1 0 0 / 0.16);
+  --input: oklch(1 0 0 / 0.15);
+  --input-bg: oklch(1 0 0 / 0.05);
+  --input-bg-hover: oklch(1 0 0 / 0.09);
+  --ring: var(--palette-blue-500);
+  --ring-destructive: oklch(from var(--destructive) l c h / 0.4);
+  --ring-success: oklch(from var(--success) l c h / 0.4);
+  --ring-warning: oklch(from var(--warning) l c h / 0.4);
+
+  --tone-color: var(--primary);
+
+  --overlay: oklch(0 0 0 / 0.65);
+
+  --switch-track: oklch(1 0 0 / 0.18);
+  --switch-track-checked: var(--primary);
+  --switch-thumb: var(--palette-neutral-100);
+  --switch-thumb-checked: var(--primary-foreground);
+
+  --chart-1: var(--palette-blue-400);
+  --chart-2: var(--palette-amber-400);
+  --chart-3: var(--palette-blue-600);
+  --chart-4: var(--palette-neutral-400);
+  --chart-5: var(--palette-danger-400);
+
+  --sidebar: var(--palette-neutral-900);
+  --sidebar-foreground: var(--palette-neutral-100);
+  --sidebar-primary: var(--palette-blue-500);
+  --sidebar-primary-foreground: var(--palette-neutral-950);
+  --sidebar-accent: var(--palette-neutral-800);
+  --sidebar-accent-foreground: var(--palette-neutral-100);
+  --sidebar-border: oklch(1 0 0 / 0.1);
+  --sidebar-ring: var(--palette-blue-500);
+
+  --glow-primary-color: var(--primary);
+  --glow-accent-color: var(--accent);
+
+  --accent-soft: oklch(from var(--accent) l c h / 0.14);
+  --accent-soft-strong: oklch(from var(--accent) l c h / 0.24);
+  --border-accent-soft: oklch(from var(--accent) l c h / 0.36);
+
+  --elevation-rest: 0 1px 2px rgb(0 0 0 / 0.45), 0 8px 18px -6px rgb(0 0 0 / 0.55);
+  --elevation-hover:
+    0 2px 4px rgb(0 0 0 / 0.5), 0 16px 32px -10px rgb(0 0 0 / 0.6),
+    0 0 0 1px color-mix(in oklab, var(--primary), transparent 80%);
+  --elevation-floating: 0 4px 8px rgb(0 0 0 / 0.5), 0 28px 56px -14px rgb(0 0 0 / 0.65);
+  --elevation-modal: 0 8px 20px rgb(0 0 0 / 0.55), 0 48px 96px -20px rgb(0 0 0 / 0.7);
+
+  --surface-tint-strong: oklch(1 0 0 / 0.5);
+  --surface-tint-medium: oklch(1 0 0 / 0.35);
+  --surface-tint-soft: oklch(1 0 0 / 0.3);
+  --surface-tint-weak: oklch(1 0 0 / 0.28);
+  --shadow-color: var(--palette-neutral-900);
+  --glass-hover-halo-color: var(--accent);
+
+  --ambient-aurora-1: color-mix(in oklab, var(--accent), transparent 86%);
+  --ambient-aurora-2: color-mix(in oklab, var(--success), transparent 88%);
+
+  --glass-bg-color: color-mix(
+    in oklab,
+    oklch(from var(--background) calc(l + 0.06) c h),
+    var(--primary) 5%
+  );
+  --glass-border-color: oklch(1 0 0 / var(--glass-border-a));
+  --glass-tint: 0.4;
+  --glass-tint-weak: 0.3;
+  --glass-tint-strong: 0.58;
+  --glass-blur: 28px;
+  --glass-blur-weak: 16px;
+  --glass-border-a: 0.18;
+  --glass-halo:
+    0 1px 2px rgb(0 0 0 / 0.4),
+    0 22px 52px -16px color-mix(in oklab, var(--primary), transparent 65%);
+
+  --backdrop-1: color-mix(in oklab, var(--primary), transparent 88%);
+  --backdrop-2: color-mix(in oklab, var(--accent), transparent 88%);
+  --backdrop-3: color-mix(in oklab, var(--primary), transparent 84%);
+  --backdrop-4: color-mix(in oklab, var(--palette-blue-300), transparent 90%);
+  --backdrop-5: color-mix(in oklab, var(--accent), transparent 90%);
+  --backdrop-base-top: color-mix(in oklab, var(--background), white 4%);
+  --backdrop-base-bottom: var(--background);
+  --backdrop-noise-opacity: 0.05;
+}
