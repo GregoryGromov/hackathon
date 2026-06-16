@@ -1,7 +1,6 @@
 import logging
 
 from django.contrib import messages
-from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.db.models import Max, Min
@@ -12,11 +11,6 @@ from django.utils import timezone
 
 from .forms import RegistrationForm, SubmissionUploadForm
 from .models import EmailVerificationToken, Submission
-from .services.email_verification import (
-    EmailDeliveryError,
-    build_confirmation_url,
-    send_verification_email,
-)
 
 logger = logging.getLogger(__name__)
 
@@ -80,30 +74,7 @@ def register_view(request: HttpRequest) -> HttpResponse:
     if request.method == "POST" and form.is_valid():
         with transaction.atomic():
             user = form.save()
-            token = EmailVerificationToken.objects.create(user=user)
-
-        confirmation_url = build_confirmation_url(request, token)
-        try:
-            send_verification_email(user, confirmation_url)
-        except EmailDeliveryError:
-            logger.exception("Could not send verification email user_id=%s", user.pk)
-            if settings.DEBUG:
-                messages.warning(
-                    request,
-                    "Could not send confirmation email through Resend. Using local confirmation link.",
-                )
-                messages.info(request, f"Local confirmation link: {confirmation_url}")
-                return redirect("login")
-
-            messages.error(
-                request,
-                "Account created, but confirmation email could not be sent. Contact support.",
-            )
-            return redirect("login")
-
-        if settings.DEBUG and not settings.RESEND_API_KEY:
-            messages.info(request, f"Local confirmation link: {confirmation_url}")
-        messages.success(request, "Check your email to confirm your account.")
+        messages.success(request, "Account created. You can sign in now.")
         return redirect("login")
     return render(request, "registration/register.html", {"form": form})
 

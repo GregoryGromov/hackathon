@@ -37,7 +37,7 @@ class RegistrationForm(UserCreationForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         user.email = self.cleaned_data["email"]
-        user.is_active = False
+        user.is_active = True
         if commit:
             user.save()
         return user
@@ -67,11 +67,6 @@ class SubmissionUploadForm(forms.ModelForm):
 class EmailAuthenticationForm(AuthenticationForm):
     username = forms.EmailField(label="Email")
 
-    error_messages = {
-        **AuthenticationForm.error_messages,
-        "inactive": "Please confirm your email before signing in.",
-    }
-
     def clean(self):
         email = self.cleaned_data.get("username")
         password = self.cleaned_data.get("password")
@@ -82,12 +77,6 @@ class EmailAuthenticationForm(AuthenticationForm):
                 user = User.objects.get(email__iexact=email)
             except (User.DoesNotExist, User.MultipleObjectsReturned):
                 user = None
-
-            if user is not None and not user.is_active and user.check_password(password):
-                raise ValidationError(
-                    self.error_messages["inactive"],
-                    code="inactive",
-                )
 
             username = user.get_username() if user else email
             self.user_cache = authenticate(
